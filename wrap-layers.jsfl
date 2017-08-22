@@ -104,24 +104,24 @@ function wrapLayers(){
    }
 }
 
-	
+   
 /**
  * Send to panel info about selected layers
  */
 function init(){
-	fl.addEventListener('frameChanged', layersSelected);
-	fl.addEventListener('layerChanged', layersSelected);
+   fl.addEventListener('frameChanged', layersSelected);
+   fl.addEventListener('layerChanged', layersSelected);
 
-	function layersSelected(){
-	   var stat = '';
-	   var layers = timeline.getSelectedLayers();
+   function layersSelected(){
+      var stat = '';
+      var layers = timeline.getSelectedLayers();
 
-	   stat += layers.length + '%split%';
+      stat += layers.length + '%split%';
 
-	   for(var i = 0; i < layers.length; i++){
-	      stat += timeline.layers[layers[i]].name + '%split%';
-	   }
+      for(var i = 0; i < layers.length; i++){
+         stat += timeline.layers[layers[i]].name + '%split%';
+      }
 
-	   getPanel().call('layerChanged', stat);
-	}
+      getPanel().call('layerChanged', stat);
+   }
 }
