@@ -1,3 +1,5 @@
+![preview](https://github.com/tpkn/wrap-layers/blob/master/preview.gif)
+
 ### Usage
 1. Select whatever layer you want
 2. Press "Wrap"
