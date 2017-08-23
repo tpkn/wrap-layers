@@ -131,7 +131,7 @@ function layersSelected(){
 
 
 function init(){
-   fl.addEventListener('mouseMove', documentChanged);
+   fl.addEventListener('documentChanged', documentChanged);
    fl.addEventListener('frameChanged', layersSelected);
    fl.addEventListener('layerChanged', layersSelected);
 }
