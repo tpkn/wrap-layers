@@ -5,7 +5,7 @@
 2. Press "Wrap"
 
 
-## Changelog
+### Changelog
 #### 2017-08-27:
  - Added ability to set name for each created container manually
  - Fixed issue when wrapped layers has inversed depth
