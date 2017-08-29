@@ -1,9 +1,11 @@
 ﻿/*!
- * Wrap Layers (v1.0.1.20170813), http://tpkn.me/
+ * Wrap Layers (v1.1.0.20170827), http://tpkn.me/
  */
 
-var lib, timeline, doc;
+var lib, timeline, doc, auto_name;
+var config_file = fl.configURI + 'wrap-layers.cfg';
 
+// fl.outputPanel.clear()
 
 function getPanel(){
    var swf_panels = fl.swfPanels;
@@ -23,16 +25,18 @@ function getPanel(){
 function wrapLayers(){
    if(doc != null){
 
-      var layers = timeline.getSelectedLayers();
+      var layers = timeline.getSelectedLayers().reverse();
       
       if(layers.length > 0){
          
          var uniq = 'mc_' + (Math.round(Math.random() * 0x1000000).toString(16));
+
+         var wrapper_name = auto_name ? prompt('Type in instance name', '') : uniq;
          
          /**
           * Insert layer for wrapper mc and move it on top
           */
-         timeline.addNewLayer(uniq, 'normal', true);
+         timeline.addNewLayer(wrapper_name, 'normal', true);
          timeline.reorderLayer(timeline.currentLayer, 0);
 
          /**
@@ -54,18 +58,14 @@ function wrapLayers(){
          /**
           * Set InstanceName
           */
-         doc.selection[0].name = uniq;
+         doc.selection[0].name = wrapper_name;
          
-         /**
-          * Change pivot point
-          */
-         //doc.selection[0].setTransformationPoint({x:doc.width, y:0}); // right, top
-         //doc.selection[0].setTransformationPoint({x:0, y:0}); // left, top
          
          var lid, source_layer;
          
          for(var i = 0; i < layers.length; i++){
             lid = layers[i] + 1;
+
             
             /**
              * I don't like irrevertible changings, so it's better to copy layers instead of cutting them
@@ -88,14 +88,16 @@ function wrapLayers(){
          wrapper_timeline.currentLayer = 0;
          wrapper_timeline.currentFrame = 0;
          wrapper_timeline.addNewLayer('as', 'normal', true);
-         
+
          /**
-          * Insert some script into first and last wrapper's frames
+          * Insert some script into first and last wrapper's frames, but only if there is more than 1 frame
           */
          var last_frame = wrapper_timeline.frameCount - 1;
-         wrapper_timeline.convertToBlankKeyframes(last_frame);
-         wrapper_timeline.layers[0].frames[0].actionScript = 'if(stage.debug){\n    this.gotoAndStop(' + last_frame + ');\n}';
-         wrapper_timeline.layers[0].frames[last_frame].actionScript = 'this.stop();';
+         if(wrapper_timeline.frameCount > 1){
+            wrapper_timeline.convertToBlankKeyframes(last_frame);
+            wrapper_timeline.layers[0].frames[0].actionScript = 'if(stage.debug){\n    this.gotoAndStop(' + last_frame + ');\n}';
+            wrapper_timeline.layers[0].frames[last_frame].actionScript = 'this.stop();';
+         }
          
          /**
           * Delete default layer with single empty frame
@@ -130,8 +132,30 @@ function layersSelected(){
 }
 
 
+function getAutoname(){
+   if(!FLfile.exists(config_file)){
+      FLfile.write(config_file, 'true');
+   }else{
+      auto_name = FLfile.read(config_file);
+   }
+
+   getPanel().call('currentAutoname', auto_name);
+}
+
+
+function setAutoname(val){
+   auto_name = val == 'true';
+   FLfile.write(config_file, auto_name);
+}
+
+
 function init(){
+   fl.addEventListener('documentNew', documentChanged);
+   fl.addEventListener('documentOpened', documentChanged);
+   fl.addEventListener('documentClosed', documentChanged);
    fl.addEventListener('documentChanged', documentChanged);
    fl.addEventListener('frameChanged', layersSelected);
    fl.addEventListener('layerChanged', layersSelected);
+   documentChanged();
+   getAutoname();
 }
