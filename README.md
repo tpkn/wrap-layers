@@ -3,12 +3,14 @@
 ### Usage
 1. Select whatever layer you want
 2. Press "Wrap"
+<br />
 
 
 ### Changelog
 #### 2017-08-27:
  - Added ability to set name for each created container manually
  - Fixed issue when wrapped layers has inversed depth
+<br />
 
 
 ### Installation
