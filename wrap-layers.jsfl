@@ -31,7 +31,7 @@ function wrapLayers(){
          
          var uniq = 'mc_' + (Math.round(Math.random() * 0x1000000).toString(16));
 
-         var wrapper_name = auto_name ? prompt('Type in instance name', '') : uniq;
+         var wrapper_name = !auto_name ? prompt('Type in instance name', '') : uniq;
          
          /**
           * Insert layer for wrapper mc and move it on top
